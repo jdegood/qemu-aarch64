@@ -1,0 +1,32 @@
+#! /bin/bash
+
+ISO=debian-12.6.0-arm64-netinst.iso
+IMAGE=aarch64.qcow2
+FORMAT=qcow2
+
+# create the EFI flash images
+rm -f flash0.img flash1.img
+dd if=/dev/zero of=flash0.img bs=1M count=64
+dd if=/dev/zero of=flash1.img bs=1M count=64
+dd if=/usr/share/edk2/aarch64/QEMU_CODE.fd of=flash0.img conv=notrunc
+dd if=/usr/share/edk2/aarch64/QEMU_VARS.fd of=flash1.img conv=notrunc
+
+# create the empty qcow2 filesystem
+rm -f $IMAGE
+qemu-img create -f $FORMAT $IMAGE 5G
+
+# boot the Debian installer ISO
+qemu-system-aarch64 \
+	-nographic \
+	-machine virt,gic-version=max \
+	-m 512M \
+	-cpu max \
+	-smp 4 \
+	-netdev user,id=vnet,hostfwd=:127.0.0.1:0-:22 \
+	-device virtio-net-pci,netdev=vnet \
+	-drive file=$IMAGE,format=$FORMAT,if=none,id=drive0,cache=writeback \
+	-device virtio-blk,drive=drive0,bootindex=0 \
+	-drive file=$ISO,media=cdrom,if=none,id=drive1,cache=writeback \
+	-device virtio-blk,drive=drive1,bootindex=1 \
+	-drive file=flash0.img,format=raw,if=pflash,readonly=on \
+	-drive file=flash1.img,format=raw,if=pflash

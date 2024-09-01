@@ -1,0 +1,4 @@
+#! /bin/bash
+
+echo QEMU is stopping. Please wait for Power down...
+sudo shutdown -h now

@@ -1,0 +1,65 @@
+# Below steps based on:
+https://futurewei-cloud.github.io/ARM-Datacenter/qemu/how-to-launch-aarch64-vm/
+
+# root passwd: lion
+# user account: lion/lion
+
+----
+
+# Install qemu on Ubuntu host
+su -l
+apt-get update
+apt-get full-upgrade
+apt-get install qemu-system-arm
+apt-get install qemu-efi-aarch64  # not needed
+apt-get install qemu-utils  # not needed
+
+# Copy the flash images on Ubuntu
+dd if=/usr/share/qemu-efi-aarch64/QEMU_EFI.fd of=flash0.img conv=notrunc
+
+----
+
+# install qemu on Manjaro host
+sudo pacman -S qemu-base
+sudo pacman -S qemu-system-aarch64
+sudo pacman -S edk2-ovmf
+
+# Copy the flash images on Manjaro
+dd if=/usr/share/ovmf/aarch64/QEMU_CODE.fd of=flash0.img conv=notrunc
+dd if=/usr/share/ovmf/aarch64/QEMU_VARS.fd of=flash1.img conv=notrunc
+
+----
+
+# Download latest Debian netinst ISO from https://debian.org e.g.,
+debian-12.6.0-arm64-netinst.iso
+
+# run install script
+
+----
+
+# post-install on aarch64 host...
+
+# install sudo
+su -l
+apt update
+apt full-upgrade
+apt install sudo
+usermod -aG sudo lion
+exit
+
+# install development software
+sudo apt install build-essential vim
+
+# clear shell history
+history -c
+history -w
+
+----
+
+# how to copy files from x86-64 host...
+
+# copy file from guest to host
+scp -P 5555 lion@localhost:guest-file-path host-file-path
+
+# copy file from host to guest
+scp -P 5555 host-file-path lion@localhost:guest-file-path

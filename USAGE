@@ -1,0 +1,17 @@
+=========================
+# useful host VM commands
+
+# aarch64 guest VM start script
+start
+
+# copy file from guest to host
+scp -P 5555 lion@localhost:guest-file-path host-file-path
+
+# copy file from host to guest
+scp -P 5555 host-file-path lion@localhost:guest-file-path
+
+==========================
+# useful guest VM commands
+
+# aarch64 guest VM stop script
+stop

@@ -1,0 +1,18 @@
+#! /bin/bash
+
+BASEDIR=/home/lion/.local/bin
+IMAGE=aarch64.qcow2
+FORMAT=qcow2
+
+qemu-system-aarch64 \
+	-nographic \
+	-machine virt,gic-version=max \
+	-m 512M \
+	-cpu max \
+	-smp 4 \
+	-netdev user,id=net0,hostfwd=::5555-:22 \
+	-device virtio-net-pci,netdev=net0 \
+	-drive file=$BASEDIR/$IMAGE,format=$FORMAT,if=none,id=drive0,cache=writeback \
+	-device virtio-blk-pci,drive=drive0,bootindex=0 \
+	-drive file=$BASEDIR/flash0.img,format=raw,if=pflash,readonly=on \
+	-drive file=$BASEDIR/flash1.img,format=raw,if=pflash

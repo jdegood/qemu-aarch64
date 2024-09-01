@@ -1,0 +1,3 @@
+#! /bin/bash
+
+tar czf qemu-aarch64.tgz aarch64.qcow2 flash0.img flash1.img start USAGE
