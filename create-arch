@@ -22,10 +22,10 @@ qemu-system-aarch64 \
 	-m 512M \
 	-cpu max \
 	-smp 4 \
-	-netdev user,id=vnet,hostfwd=:127.0.0.1:0-:22 \
-	-device virtio-net-pci,netdev=vnet \
+	-netdev user,id=net0,hostfwd=:127.0.0.1:0-:22 \
+	-device virtio-net-pci,netdev=net0 \
 	-drive file=$IMAGE,format=$FORMAT,if=none,id=drive0,cache=writeback \
-	-device virtio-blk,drive=drive0,bootindex=0 \
+	-device virtio-blk-pci,drive=drive0,bootindex=0 \
 	-drive file=$ISO,media=cdrom,if=none,id=drive1,cache=writeback \
 	-device virtio-blk,drive=drive1,bootindex=1 \
 	-drive file=flash0.img,format=raw,if=pflash,readonly=on \
