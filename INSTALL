@@ -33,11 +33,12 @@ dd if=/usr/share/ovmf/aarch64/QEMU_VARS.fd of=flash1.img conv=notrunc
 # Download latest Debian netinst ISO from https://debian.org e.g.,
 debian-12.6.0-arm64-netinst.iso
 
-# run install script
+# run create script on arch host
+./create-arch
 
 ----
 
-# post-install on aarch64 host...
+# post-install on aarch64 guest...
 
 # install sudo
 su -l
@@ -56,7 +57,7 @@ history -w
 
 ----
 
-# how to copy files from x86-64 host...
+# how to copy files from x86-64 host command line
 
 # copy file from guest to host
 scp -P 5555 lion@localhost:guest-file-path host-file-path
